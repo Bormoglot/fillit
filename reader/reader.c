@@ -6,14 +6,14 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/10/30 22:38:56 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/10/31 20:46:57 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
 
 /*
-** Counts adjacent filled spaces and return their number.
+** Counts adjacent filled spaces (right, left, down, up) and return their number.
 */
 
 int	count_adjacent(int i, char *block)
@@ -34,6 +34,11 @@ int	count_adjacent(int i, char *block)
 
 /*
 ** Checks if block is invalid.
+** Checks:
+** 		- only '#', '.' and '\n' chars?
+** 		- exactly 4 '#' chars and 6 or 8 connections?
+** 		- every 5-char line of a block ends with a '\n'?
+**		- the char after the block is either a '\n' or '\0' ?  
 ** Returns 1 if invalid, 0 if valid.
 */
 
@@ -59,9 +64,10 @@ int	block_invalid(char *block)
 			return (1);
 		++i;
 	}
-	if ((block[i + 1] != '\n') || (block[i + 1] != '\0'))
+	if ((block[i + 1] != '\n') && (block[i + 1] != '\0'))
 		return (1);
-	if ((num_hashes != 4) || ((num_connections != 6) || (num_connections != 8)))
+	if ((num_hashes != 4 && num_connections != 6) ||
+	(num_hashes != 4 && num_connections != 8))
 		return (1);
 	return (0);
 }
@@ -82,7 +88,6 @@ int	read_input(int fd)
 	
 	num_of_blocks = 0;
 	ft_putendl("Will be reading from fd.");
-	ft_putnbr(fd);
 	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE] = '\0';
 	while ((read_result = read(fd, buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE)))
 	{
@@ -93,10 +98,15 @@ int	read_input(int fd)
 			ft_putendl("Block invalid");
 			return (0);
 		}
+		/* save_tetri(buffer) */
 		++num_of_blocks;
+
 		last_read = read_result;
 	}
-	if (last_read != NUM_CHARS_IN_BLOCK)
+	if ((last_read != NUM_CHARS_IN_BLOCK) || (num_of_blocks > MAX_NUM_BLOCKS))
+	{
+		/* delete list */
 		return (0);
+	}
 	return (num_of_blocks);
 }
