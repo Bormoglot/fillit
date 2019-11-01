@@ -6,27 +6,35 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/01 15:04:35 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/01 19:29:50 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "reader.h"
+#include <stdio.h>					/* TO REMOVE !!!! */
 #define POINTS_IN_SHAPE 4
-
-typedef struct		s_point
-{
-	unsigned char	x;
-	unsigned char	y;
-}					t_point;
 
 /*
 ** Shifts the coords to the upper-left (to the origin)
-** Input and output:
-** 		int array[8]
+** Input:
+** 		t_point struct min_xy with minimum x and y coords;
+** 		array of 4 t_point structs.
+** Output:
+** 		array of 4 t_point structs.
 */
 
-t_point		*normalize_coords(t_point min_xy, t_point min_coords[])
+t_point		*normalize_coords(t_point min_xy, t_point coords[])
 {
+	int	i;
 
+	i = 0;
+	while (i < POINTS_IN_SHAPE)
+	{
+		coords[i].x -= min_xy.x;
+		coords[i].y -= min_xy.y;
+		++i;
+	}
+	return (coords);
 }
 
 /*
@@ -61,6 +69,8 @@ t_point		get_min_xy(t_point coords[])
 ** Reads the first 18 chars of an array representing a block.
 ** Assumes a block is valid.
 ** Returns an array of 4 point structs.
+**
+** TODO: add successful malloc check.
 */
 
 t_point		*get_coords(char *block)
@@ -68,13 +78,15 @@ t_point		*get_coords(char *block)
 	int		x_counter;
 	int		y_counter;
 	int		i;
-	t_point	coords[POINTS_IN_SHAPE];
+	t_point	*coords;
 	int		coords_ix;
 
 	i = 0;
 	x_counter = 0;
 	y_counter = 0;
 	coords_ix = 0;
+	if (!(coords = (t_point *)malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
+		return (NULL);
 	while (i < NUM_CHARS_IN_BLOCK - 1)
 	{
 		if (block[i] == '\n')
@@ -94,7 +106,37 @@ t_point		*get_coords(char *block)
 	return (coords);
 }
 
+/*
+** A test print function
+*/
+
+void print_tetri(t_point *shape)
+{
+	int	i;
+
+	i = 0;
+	while (i < POINTS_IN_SHAPE)
+	{
+		printf("%d point x: %u\n", i, shape[i].x);
+		printf("%d point y: %u\n", i, shape[i].y);
+		printf("###################\n");
+		++i;
+	}
+}
+
 int		save_tetri(char *block)
 {
+	t_point	*shape;
+	t_point	min_coords;
 
+	shape = get_coords(block);
+	if (shape)
+	{
+		min_coords = get_min_xy(shape);
+		shape = normalize_coords(min_coords, shape);
+		print_tetri(shape);
+		/* save tetri */
+		free(shape);
+	}
+	return (1);
 }
