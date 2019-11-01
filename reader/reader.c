@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/01 14:34:39 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/01 18:09:32 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	read_input(int fd)
 			return (0);
 		}
 		/* save_tetri(buffer) */
+		save_tetri(buffer);
 		++num_of_blocks;
 
 		last_read = read_result;
