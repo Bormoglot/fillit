@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/10/31 20:46:57 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/01 14:34:39 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	block_invalid(char *block)
 			return (1);
 		++i;
 	}
-	if ((block[i + 1] != '\n') && (block[i + 1] != '\0'))
+	if ((block[i + 1] != '\n') && (block[i + 1] != '\0')) /* think about this */
 		return (1);
 	if ((num_hashes != 4 && num_connections != 6) ||
 	(num_hashes != 4 && num_connections != 8))
