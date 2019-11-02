@@ -6,12 +6,11 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/01 19:29:50 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/02 21:26:13 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
-#include <stdio.h>					/* TO REMOVE !!!! */
 #define POINTS_IN_SHAPE 4
 
 /*
@@ -68,9 +67,7 @@ t_point		get_min_xy(t_point coords[])
 /*
 ** Reads the first 18 chars of an array representing a block.
 ** Assumes a block is valid.
-** Returns an array of 4 point structs.
-**
-** TODO: add successful malloc check.
+** Returns an array of 4 point structs if successful, NULL otherwise.
 */
 
 t_point		*get_coords(char *block)
@@ -81,12 +78,12 @@ t_point		*get_coords(char *block)
 	t_point	*coords;
 	int		coords_ix;
 
+	if (!(coords = (t_point *)malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
+		return (NULL);
 	i = 0;
 	x_counter = 0;
 	y_counter = 0;
 	coords_ix = 0;
-	if (!(coords = (t_point *)malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
-		return (NULL);
 	while (i < NUM_CHARS_IN_BLOCK - 1)
 	{
 		if (block[i] == '\n')
@@ -94,13 +91,15 @@ t_point		*get_coords(char *block)
 			++y_counter;
 			x_counter = 0;
 		}
-		if (block[i] == '#')
+		else if (block[i] == '#')
 		{
 			coords[coords_ix].x = x_counter;
 			coords[coords_ix].y = y_counter;
 			++coords_ix;
+			++x_counter;
 		}
-		++x_counter;
+		else
+			++x_counter;
 		++i;
 	}
 	return (coords);
@@ -110,31 +109,51 @@ t_point		*get_coords(char *block)
 ** A test print function
 */
 
-void print_tetri(t_point *shape)
+void	print_tetri(t_point *shape, char block_letter)
 {
-	int	i;
+	int		j;
+	int		i;
+	char	tetri_string[NUM_CHARS_IN_BLOCK + 1];
 
+	tetri_string[NUM_CHARS_IN_BLOCK] = '\0';
+	j = 0;
+	while (j < NUM_CHARS_IN_BLOCK)
+	{
+		if ((j + 1) % 5 == 0)
+			tetri_string[j] = '\n';
+		else
+			tetri_string[j] = '.';
+		++j;
+	}
 	i = 0;
 	while (i < POINTS_IN_SHAPE)
 	{
-		printf("%d point x: %u\n", i, shape[i].x);
-		printf("%d point y: %u\n", i, shape[i].y);
-		printf("###################\n");
+		tetri_string[shape[i].x + (shape[i].y) * 5] = block_letter;
 		++i;
 	}
+	ft_putstr(tetri_string);
+	ft_putchar('\n');
 }
 
-int		save_tetri(char *block)
+/*
+** Saves normalized coordinates of a shape in a node of a singly linked
+** 'storage_list'
+** If successful, returns 1.
+** If normalization or saving fails, returns NULL.
+*/
+
+int		save_tetri(char *block, char block_letter, t_list *list)
 {
 	t_point	*shape;
 	t_point	min_coords;
 
+	list = NULL;
 	shape = get_coords(block);
 	if (shape)
 	{
 		min_coords = get_min_xy(shape);
 		shape = normalize_coords(min_coords, shape);
-		print_tetri(shape);
+		print_tetri(shape, block_letter);
 		/* save tetri */
 		free(shape);
 	}
