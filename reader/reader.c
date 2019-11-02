@@ -6,14 +6,15 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/01 18:09:32 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/02 21:36:24 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
 
 /*
-** Counts adjacent filled spaces (right, left, down, up) and return their number.
+** Counts adjacent filled spaces (right, left, down, up) and return their
+** number.
 */
 
 int	count_adjacent(int i, char *block)
@@ -38,7 +39,7 @@ int	count_adjacent(int i, char *block)
 ** 		- only '#', '.' and '\n' chars?
 ** 		- exactly 4 '#' chars and 6 or 8 connections?
 ** 		- every 5-char line of a block ends with a '\n'?
-**		- the char after the block is either a '\n' or '\0' ?  
+**		- the char after the block is either a '\n' or '\0' ?
 ** Returns 1 if invalid, 0 if valid.
 */
 
@@ -60,7 +61,7 @@ int	block_invalid(char *block)
 			++num_hashes;
 			num_connections += count_adjacent(i, block);
 		}
-		if ((block [i] == '\n') && !((i + 1) % 5 == 0))
+		if ((block[i] == '\n') && !((i + 1) % 5 == 0))
 			return (1);
 		++i;
 	}
@@ -76,7 +77,7 @@ int	block_invalid(char *block)
 ** Read the file with a buffer of size 21 (one block is 16 chars of grid,
 ** 4 '\n's and a final '\n'). The last block (or if there's only one) should
 ** have 20 chars.
-** Returns 0 on error, number of blocks in an input file on success.   
+** Returns 0 on error, next letter after the last block letter on success.
 */
 
 int	read_input(int fd)
@@ -84,30 +85,26 @@ int	read_input(int fd)
 	char	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE + 1];
 	int		read_result;
 	int		last_read;
-	int		num_of_blocks;
-	
-	num_of_blocks = 0;
-	ft_putendl("Will be reading from fd.");
+	char	block_letter;
+	t_list	*list;
+
+	list = NULL;
+	block_letter = 'A';
+	//ft_putendl("Will be reading from fd.");
 	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE] = '\0';
 	while ((read_result = read(fd, buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE)))
 	{
-		if (read_result < NUM_CHARS_IN_BLOCK)
+		if ((read_result < NUM_CHARS_IN_BLOCK) || block_invalid(buffer))
 			return (0);
-		if (block_invalid(buffer))
-		{
-			ft_putendl("Block invalid");
-			return (0);
-		}
 		/* save_tetri(buffer) */
-		save_tetri(buffer);
-		++num_of_blocks;
-
+		save_tetri(buffer, block_letter, list);
+		++block_letter;
 		last_read = read_result;
 	}
-	if ((last_read != NUM_CHARS_IN_BLOCK) || (num_of_blocks > MAX_NUM_BLOCKS))
+	if ((last_read != NUM_CHARS_IN_BLOCK) || ((block_letter - 1) > 'Z'))
 	{
 		/* delete list */
 		return (0);
 	}
-	return (num_of_blocks);
+	return (block_letter);
 }
