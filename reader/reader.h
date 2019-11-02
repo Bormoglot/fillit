@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 18:31:34 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/01 19:29:55 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/02 21:28:05 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ typedef struct		s_point
 
 typedef struct		s_tetri
 {
-	t_point		 	*shape;
-	char			c;
-	struct s_tetri 	*next;
+	t_point			*shape;
+	char			letter;
+	struct s_tetri	*next;
 }					t_tetri;
 
-int	read_input(int fd);
-int	save_tetri(char *block);
+int					read_input(int fd);
+int					save_tetri(char *block, char block_letter, t_list *list);
 #endif
