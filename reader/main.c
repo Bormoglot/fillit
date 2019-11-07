@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 18:22:26 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 18:43:45 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 19:41:08 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ int main(int argc, char **argv)
 		{
 			list = read_input(fd);
 			if (list)
+			{
 				ft_printlist(list);
+				ft_deletelist(list);
+			}
 			else
 				ft_putendl("No list(\n");
 		}

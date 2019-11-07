@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 18:55:35 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 19:15:29 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** number.
 */
 
-int	count_adjacent(int i, char *block)
+int		count_adjacent(int i, char *block)
 {
 	int		num_adjacent;
 
@@ -43,7 +43,7 @@ int	count_adjacent(int i, char *block)
 ** Returns 1 if invalid, 0 if valid.
 */
 
-int	block_invalid(char *block)
+int		block_invalid(char *block)
 {
 	int		i;
 	int		num_hashes;
@@ -94,12 +94,8 @@ t_tetri	*read_input(int fd)
 	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE] = '\0';
 	while ((read_result = read(fd, buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE)))
 	{
-		if ((read_result < NUM_CHARS_IN_BLOCK) || block_invalid(buffer))
-		{
-			ft_deletelist(list);
-			return (NULL);
-		}
-		if (save_tetri(buffer, block_letter, list))
+		if (!((read_result < NUM_CHARS_IN_BLOCK) || block_invalid(buffer))
+		&& save_tetri(buffer, block_letter, list))
 		{
 			++block_letter;
 			last_read = read_result;

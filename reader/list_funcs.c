@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/02 17:58:33 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 19:02:16 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 19:06:52 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	ft_deletelist(t_tetri *list_head)
 void	ft_printlist(t_tetri *node)
 {
 	while (node->next)
-		{
-			print_tetri(node->shape, node->letter);
-			node = node->next;
-		}
+	{
+		print_tetri(node->shape, node->letter);
+		node = node->next;
+	}
 	print_tetri(node->shape, node->letter);
 }

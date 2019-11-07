@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 18:56:11 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 19:23:48 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ t_point		*get_coords(char *block)
 ** A test print function
 */
 
-void	print_tetri(t_point *shape, char block_letter)
+void		print_tetri(t_point *shape, char block_letter)
 {
 	int		j;
 	int		i;
@@ -138,10 +138,10 @@ void	print_tetri(t_point *shape, char block_letter)
 ** Saves normalized coordinates of a shape in a node of a singly linked
 ** 'storage_list'
 ** If successful, returns 1.
-** If normalization or saving fails, returns NULL.
+** If normalization or saving fails, returns 0.
 */
 
-int		save_tetri(char *block, char block_letter, t_tetri *node)
+int			save_tetri(char *block, char block_letter, t_tetri *node)
 {
 	t_point	*shape;
 	t_point	min_coords;
