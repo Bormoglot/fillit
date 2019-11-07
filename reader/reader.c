@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/02 21:36:24 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 18:55:35 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,34 +77,43 @@ int	block_invalid(char *block)
 ** Read the file with a buffer of size 21 (one block is 16 chars of grid,
 ** 4 '\n's and a final '\n'). The last block (or if there's only one) should
 ** have 20 chars.
-** Returns 0 on error, next letter after the last block letter on success.
+** Returns NULL on error, list head on success.
 */
 
-int	read_input(int fd)
+t_tetri	*read_input(int fd)
 {
 	char	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE + 1];
 	int		read_result;
 	int		last_read;
 	char	block_letter;
-	t_list	*list;
+	t_tetri	*list;
 
-	list = NULL;
+	if (!(list = ft_createlist(NULL, 0)))
+		return (NULL);
 	block_letter = 'A';
-	//ft_putendl("Will be reading from fd.");
 	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE] = '\0';
 	while ((read_result = read(fd, buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE)))
 	{
 		if ((read_result < NUM_CHARS_IN_BLOCK) || block_invalid(buffer))
-			return (0);
-		/* save_tetri(buffer) */
-		save_tetri(buffer, block_letter, list);
-		++block_letter;
-		last_read = read_result;
+		{
+			ft_deletelist(list);
+			return (NULL);
+		}
+		if (save_tetri(buffer, block_letter, list))
+		{
+			++block_letter;
+			last_read = read_result;
+		}
+		else
+		{
+			ft_deletelist(list);
+			return (NULL);
+		}
 	}
 	if ((last_read != NUM_CHARS_IN_BLOCK) || ((block_letter - 1) > 'Z'))
 	{
-		/* delete list */
-		return (0);
+		ft_deletelist(list);
+		return (NULL);
 	}
-	return (block_letter);
+	return (list);
 }
