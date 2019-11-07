@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 18:22:26 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/02 18:36:05 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 18:43:45 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int main(int argc, char **argv)
 {
-	char    *file_path;
-	int     fd;
+	char		*file_path;
+	int			fd;
+	t_tetri		*list;
 
 	if (argc == 2)
 	{
@@ -25,7 +26,11 @@ int main(int argc, char **argv)
 		fd = open(file_path, O_RDONLY);
 		if (fd != -1)
 		{
-			ft_putchar(read_input(fd));
+			list = read_input(fd);
+			if (list)
+				ft_printlist(list);
+			else
+				ft_putendl("No list(\n");
 		}
 		else
 		{
