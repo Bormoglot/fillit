@@ -6,12 +6,11 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/02 21:26:13 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/07 18:56:11 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reader.h"
-#define POINTS_IN_SHAPE 4
 
 /*
 ** Shifts the coords to the upper-left (to the origin)
@@ -142,19 +141,36 @@ void	print_tetri(t_point *shape, char block_letter)
 ** If normalization or saving fails, returns NULL.
 */
 
-int		save_tetri(char *block, char block_letter, t_list *list)
+int		save_tetri(char *block, char block_letter, t_tetri *node)
 {
 	t_point	*shape;
 	t_point	min_coords;
 
-	list = NULL;
 	shape = get_coords(block);
 	if (shape)
 	{
 		min_coords = get_min_xy(shape);
 		shape = normalize_coords(min_coords, shape);
-		print_tetri(shape, block_letter);
-		/* save tetri */
+		if (!(node->shape))
+		{
+			if (!(node->shape = malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
+			{
+				free(shape);
+				return (0);
+			}
+			ft_memcpy(node->shape, (void *)shape, sizeof(t_point) * POINTS_IN_SHAPE);
+			node->letter = block_letter;
+		}
+		else
+		{
+			while (node->next)
+				node = node->next;
+			if (!(ft_addnode(shape, block_letter, node)))
+			{
+				free(shape);
+				return (0);
+			}
+		}
 		free(shape);
 	}
 	return (1);
