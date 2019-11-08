@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 19:23:48 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/08 18:53:22 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ t_point		get_min_xy(t_point coords[])
 
 t_point		*get_coords(char *block)
 {
-	int		x_counter;
-	int		y_counter;
 	int		i;
 	t_point	*coords;
 	int		coords_ix;
@@ -80,25 +78,15 @@ t_point		*get_coords(char *block)
 	if (!(coords = (t_point *)malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
 		return (NULL);
 	i = 0;
-	x_counter = 0;
-	y_counter = 0;
 	coords_ix = 0;
 	while (i < NUM_CHARS_IN_BLOCK - 1)
 	{
-		if (block[i] == '\n')
+		if (block[i] == '#')
 		{
-			++y_counter;
-			x_counter = 0;
-		}
-		else if (block[i] == '#')
-		{
-			coords[coords_ix].x = x_counter;
-			coords[coords_ix].y = y_counter;
+			coords[coords_ix].x = ((i + 1) % 5) - 1;
+			coords[coords_ix].y = (i + 1) / 5;
 			++coords_ix;
-			++x_counter;
 		}
-		else
-			++x_counter;
 		++i;
 	}
 	return (coords);
