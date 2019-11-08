@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/31 20:27:08 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/08 18:53:22 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/08 19:29:39 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,41 +93,36 @@ t_point		*get_coords(char *block)
 }
 
 /*
-** A test print function
-*/
-
-void		print_tetri(t_point *shape, char block_letter)
-{
-	int		j;
-	int		i;
-	char	tetri_string[NUM_CHARS_IN_BLOCK + 1];
-
-	tetri_string[NUM_CHARS_IN_BLOCK] = '\0';
-	j = 0;
-	while (j < NUM_CHARS_IN_BLOCK)
-	{
-		if ((j + 1) % 5 == 0)
-			tetri_string[j] = '\n';
-		else
-			tetri_string[j] = '.';
-		++j;
-	}
-	i = 0;
-	while (i < POINTS_IN_SHAPE)
-	{
-		tetri_string[shape[i].x + (shape[i].y) * 5] = block_letter;
-		++i;
-	}
-	ft_putstr(tetri_string);
-	ft_putchar('\n');
-}
-
-/*
 ** Saves normalized coordinates of a shape in a node of a singly linked
 ** 'storage_list'
 ** If successful, returns 1.
 ** If normalization or saving fails, returns 0.
 */
+
+int			save_in_node(t_point *shape, char block_letter, t_tetri *node)
+{
+	if (!(node->shape))
+	{
+		if (!(node->shape = malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
+		{
+			free(shape);
+			return (0);
+		}
+		ft_memcpy(node->shape, shape, sizeof(t_point) * POINTS_IN_SHAPE);
+		node->letter = block_letter;
+	}
+	else
+	{
+		while (node->next)
+			node = node->next;
+		if (!(ft_addnode(shape, block_letter, node)))
+		{
+			free(shape);
+			return (0);
+		}
+	}
+	return (1);
+}
 
 int			save_tetri(char *block, char block_letter, t_tetri *node)
 {
@@ -139,25 +134,10 @@ int			save_tetri(char *block, char block_letter, t_tetri *node)
 	{
 		min_coords = get_min_xy(shape);
 		shape = normalize_coords(min_coords, shape);
-		if (!(node->shape))
+		if (!(save_in_node(shape, block_letter, node)))
 		{
-			if (!(node->shape = malloc(sizeof(t_point) * POINTS_IN_SHAPE)))
-			{
-				free(shape);
-				return (0);
-			}
-			ft_memcpy(node->shape, (void *)shape, sizeof(t_point) * POINTS_IN_SHAPE);
-			node->letter = block_letter;
-		}
-		else
-		{
-			while (node->next)
-				node = node->next;
-			if (!(ft_addnode(shape, block_letter, node)))
-			{
-				free(shape);
-				return (0);
-			}
+			free(shape);
+			return (0);
 		}
 		free(shape);
 	}
