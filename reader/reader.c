@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/30 17:41:27 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 19:15:29 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/08 17:13:32 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		block_invalid(char *block)
 	num_connections = 0;
 	while (i < NUM_CHARS_IN_BLOCK - 1)
 	{
-		if (block[i] && (block[i] != '#') && (block[i] != '.') && (block[i] != '\n'))
+		if ((block[i] != '#') && (block[i] != '.') && (block[i] != '\n'))
 			return (1);
 		if (block[i] == '#')
 		{
@@ -65,10 +65,9 @@ int		block_invalid(char *block)
 			return (1);
 		++i;
 	}
-	if ((block[i + 1] != '\n') && (block[i + 1] != '\0')) /* think about this */
+	if ((block[i + 1] != '\n') && (block[i + 1] != '\0'))
 		return (1);
-	if ((num_hashes != 4 && num_connections != 6) ||
-	(num_hashes != 4 && num_connections != 8))
+	if ((num_hashes != 4) || (num_connections != 6 && num_connections != 8))
 		return (1);
 	return (0);
 }
@@ -91,7 +90,7 @@ t_tetri	*read_input(int fd)
 	if (!(list = ft_createlist(NULL, 0)))
 		return (NULL);
 	block_letter = 'A';
-	buffer[NUM_CHARS_IN_BLOCK_WITH_NEWLINE] = '\0';
+	ft_bzero(buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE + 1);
 	while ((read_result = read(fd, buffer, NUM_CHARS_IN_BLOCK_WITH_NEWLINE)))
 	{
 		if (!((read_result < NUM_CHARS_IN_BLOCK) || block_invalid(buffer))
