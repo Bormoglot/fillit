@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/02 17:58:33 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/07 19:06:52 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/08 19:29:36 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,36 @@ void	ft_deletelist(t_tetri *list_head)
 	free(node->shape);
 	free(node);
 	node = NULL;
+}
+
+/*
+** A test print function
+*/
+
+void		print_tetri(t_point *shape, char block_letter)
+{
+	int		j;
+	int		i;
+	char	tetri_string[NUM_CHARS_IN_BLOCK + 1];
+
+	tetri_string[NUM_CHARS_IN_BLOCK] = '\0';
+	j = 0;
+	while (j < NUM_CHARS_IN_BLOCK)
+	{
+		if ((j + 1) % 5 == 0)
+			tetri_string[j] = '\n';
+		else
+			tetri_string[j] = '.';
+		++j;
+	}
+	i = 0;
+	while (i < POINTS_IN_SHAPE)
+	{
+		tetri_string[shape[i].x + (shape[i].y) * 5] = block_letter;
+		++i;
+	}
+	ft_putstr(tetri_string);
+	ft_putchar('\n');
 }
 
 void	ft_printlist(t_tetri *node)
