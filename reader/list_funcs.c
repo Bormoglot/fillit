@@ -6,7 +6,7 @@
 /*   By: jlavona <jlavona@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/02 17:58:33 by jlavona           #+#    #+#             */
-/*   Updated: 2019/11/08 19:29:36 by jlavona          ###   ########.fr       */
+/*   Updated: 2019/11/08 19:43:46 by jlavona          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		ft_addnode(t_point *shape, char letter, t_tetri *last_node)
 		return (0);
 }
 
-void	ft_deletelist(t_tetri *list_head)
+t_tetri		*ft_deletelist(t_tetri *list_head)
 {
 	t_tetri *node;
 	t_tetri *tmp_node;
@@ -64,6 +64,7 @@ void	ft_deletelist(t_tetri *list_head)
 	free(node->shape);
 	free(node);
 	node = NULL;
+	return (node);
 }
 
 /*
